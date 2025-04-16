@@ -33,7 +33,7 @@ const SessionCatalog = () => {
         return;
       }
 
-      const session = sessions.find(s => s.id === sessionId);
+      const session = sessions.find(s => s.id === sessionId || s._id === sessionId);
 
       if (!session) {
         showError('Session not found');

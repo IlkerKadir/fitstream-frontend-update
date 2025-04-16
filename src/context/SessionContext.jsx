@@ -56,7 +56,7 @@ export const SessionProvider = ({ children }) => {
 
     loadData();
   }, [showError]);
-  
+
   // Get a specific session by ID
   const getSessionById = async (id) => {
     try {
@@ -71,6 +71,10 @@ export const SessionProvider = ({ children }) => {
 
       // If not found in state, fetch from API
       const sessionData = await sessionService.getSessionById(id);
+      // Ensure both _id and id properties exist
+      if (sessionData._id && !sessionData.id) {
+        sessionData.id = sessionData._id;
+      }
       return sessionData;
     } catch (err) {
       console.error('Error fetching session:', err);

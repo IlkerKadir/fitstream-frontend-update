@@ -6,6 +6,24 @@ import Button from '../common/Button';
 const SessionDetail = ({ session, onBookSession, isBooked = false }) => {
   if (!session) return null;
 
+  // Safely handle properties that might be objects or arrays
+  const participantCount = Array.isArray(session.participants)
+    ? session.participants.length
+    : (typeof session.participants === 'number' ? session.participants : 0);
+
+  const equipmentList = Array.isArray(session.equipmentRequired)
+    ? session.equipmentRequired.join(', ')
+    : (typeof session.equipmentRequired === 'string' ? session.equipmentRequired : '');
+
+  const tagsList = Array.isArray(session.tags)
+    ? session.tags
+    : [];
+
+  // Handle trainer data which might be an object
+  const trainerName = session.trainer && typeof session.trainer === 'object'
+    ? `${session.trainer.firstName || ''} ${session.trainer.lastName || ''}`
+    : (typeof session.trainer === 'string' ? session.trainer : 'Unknown');
+
   const formatDate = (date) => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const timeOptions = { hour: '2-digit', minute: '2-digit' };
@@ -77,17 +95,18 @@ const SessionDetail = ({ session, onBookSession, isBooked = false }) => {
 
             <div className="flex flex-wrap gap-2 mb-6">
               <span className="px-3 py-1 text-xs bg-indigo-100 text-indigo-800 rounded-full">
-                {session.category}
+                {session.category || 'General'}
               </span>
               <span className="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
-                {session.difficulty}
+                {session.difficulty || 'All Levels'}
               </span>
-              {session.tags.map(tag => (
+              {tagsList.map(tag => (
                 <span key={tag} className="px-3 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">
                   {tag}
                 </span>
               ))}
             </div>
+            
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div className="flex items-center text-gray-700">
@@ -111,7 +130,7 @@ const SessionDetail = ({ session, onBookSession, isBooked = false }) => {
                 <div>
                   <p className="text-sm font-medium">Participants</p>
                   <p className="text-sm">
-                    {session.participants} joined
+                    {participantCount} joined
                     {session.maxParticipants > 0 && ` (Max: ${session.maxParticipants})`}
                   </p>
                 </div>
@@ -133,15 +152,15 @@ const SessionDetail = ({ session, onBookSession, isBooked = false }) => {
                 </div>
               </div>
 
-              {session.equipmentRequired && session.equipmentRequired.length > 0 && (
+              {equipmentList && (
                 <div className="flex items-center text-gray-700">
-                  <Dumbbell size={18} className="mr-2 text-indigo-600" />
                   <div>
                     <p className="text-sm font-medium">Equipment Required</p>
-                    <p className="text-sm">{session.equipmentRequired.join(', ')}</p>
+                    <p className="text-sm">{equipmentList}</p>
                   </div>
                 </div>
               )}
+
             </div>
 
             <div className="mb-8">

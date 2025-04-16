@@ -25,6 +25,11 @@ const sessionService = {
 
   // Book a session
   bookSession: async (sessionId) => {
+    // Make sure sessionId is defined before making the request
+    if (!sessionId) {
+      throw new Error('Session ID is undefined');
+    }
+
     const response = await api.post(`/sessions/${sessionId}/book`);
     return response.data;
   },
