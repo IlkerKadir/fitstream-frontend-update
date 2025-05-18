@@ -2,8 +2,9 @@
 import React from 'react';
 import { Clock, Users, Package, Award, Dumbbell } from 'lucide-react';
 import Button from '../common/Button';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const SessionDetail = ({ session, onBookSession, isBooked = false }) => {
+const SessionDetail = ({ session, onBookSession, onJoinSession, isBooked = false }) => {
   if (!session) return null;
 
   // Safely handle properties that might be objects or arrays
@@ -106,7 +107,7 @@ const SessionDetail = ({ session, onBookSession, isBooked = false }) => {
                 </span>
               ))}
             </div>
-            
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div className="flex items-center text-gray-700">
@@ -193,7 +194,7 @@ const SessionDetail = ({ session, onBookSession, isBooked = false }) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-700">Participants:</span>
-                  <span className="font-medium text-gray-900">{session.participants}</span>
+                  <span className="font-medium text-gray-900">{session.participants.length}</span>
                 </div>
               </div>
 
@@ -211,8 +212,8 @@ const SessionDetail = ({ session, onBookSession, isBooked = false }) => {
                 <Button
                   variant="primary"
                   fullWidth
-                  onClick={() => onBookSession(session.id)}
-                  disabled={new Date(session.scheduledAt) < new Date()}
+                  onClick={() => onJoinSession(session.id || session._id)}
+                  disabled={new Date(session.scheduledAt) > new Date()}
                 >
                   {new Date(session.scheduledAt) < new Date()
                     ? 'Session Started'

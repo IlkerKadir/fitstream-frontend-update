@@ -78,6 +78,11 @@ const SessionPage = () => {
     }
   };
 
+  const handleJoinSession = (sessionId) => {
+  navigate(`/live/${sessionId}`);
+};
+
+
   if (loading) {
     return (
       <PageContainer>
@@ -122,6 +127,7 @@ const SessionPage = () => {
         session={session}
         isBooked={isBooked}
         onBookSession={handleBookSession}
+        onJoinSession={handleJoinSession}  // Add this prop
       />
     </PageContainer>
   );
